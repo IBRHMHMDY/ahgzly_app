@@ -1,5 +1,4 @@
-part of 'restaurants_bloc.dart';
-
+import 'package:equatable/equatable.dart';
 
 abstract class RestaurantsEvent extends Equatable {
   @override

@@ -1,6 +1,8 @@
+import 'package:ahgzly_app/features/restaurants/view/details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/restaurants_bloc.dart';
+import '../bloc/restaurants_state.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,33 +10,49 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("احجزلي أونلاين - المطاعم")),
+      appBar: AppBar(title: const Text("قائمة المطاعم")),
       body: BlocBuilder<RestaurantsBloc, RestaurantsState>(
         builder: (context, state) {
           if (state is RestaurantsLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is RestaurantsLoaded) {
+            if (state.restaurants.isEmpty) {
+              return const Center(child: Text("لا توجد مطاعم حالياً"));
+            }
             return ListView.builder(
               itemCount: state.restaurants.length,
               itemBuilder: (context, index) {
-                final res = state.restaurants[index];
+                final restaurant = state.restaurants[index];
                 return Card(
-                  margin: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   child: ListTile(
-                    title: Text(res['name']),
-                    subtitle: Text(res['address'] ?? 'لا يوجد عنوان'),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () {
-                      // سنضيف الانتقال لصفحة التفاصيل لاحقاً
-                    },
+                    leading: const CircleAvatar(child: Icon(Icons.restaurant)),
+                    title: Text(restaurant['name'] ?? 'بدون اسم'),
+                    subtitle: Text(restaurant['address'] ?? 'العنوان غير محدد'),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            DetailsScreen(restaurant: restaurant),
+                      ),
+                    ),
                   ),
                 );
               },
             );
           } else if (state is RestaurantsError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Text(
+                state.message,
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
           }
-          return const Center(child: Text("ابدأ البحث عن مطاعم"));
+          return const Center(child: Text("مرحباً بك في تطبيق حجوزاتي"));
         },
       ),
     );
