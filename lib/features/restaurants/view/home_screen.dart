@@ -1,3 +1,6 @@
+import 'package:ahgzly_app/features/my_bookings/bloc/my_bookings_bloc.dart';
+import 'package:ahgzly_app/features/my_bookings/bloc/my_bookings_event.dart';
+import 'package:ahgzly_app/features/my_bookings/view/my_bookings_screen.dart';
 import 'package:ahgzly_app/features/restaurants/view/details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +13,25 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("قائمة المطاعم")),
+      appBar: AppBar(
+        title: const Text("قائمة المطاعم"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list_alt),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MyBookingsScreen(),
+                ),
+              );
+              context.read<MyBookingsBloc>().add(
+                FetchMyBookings(),
+              ); // تحديث البيانات عند الفتح
+            },
+          ),
+        ],
+      ),
       body: BlocBuilder<RestaurantsBloc, RestaurantsState>(
         builder: (context, state) {
           if (state is RestaurantsLoading) {

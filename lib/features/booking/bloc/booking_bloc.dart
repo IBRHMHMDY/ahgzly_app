@@ -8,11 +8,11 @@ import '../../../core/api_service.dart';
 
 class BookingBloc extends Bloc<BookingEvent, BookingState> {
   final ApiService apiService;
- 
+
   BookingBloc(this.apiService) : super(BookingInitial()) {
     on<SubmitBooking>((event, emit) async {
       emit(BookingLoading());
-  // افترضنا أن لديك هذه المتغيرات من الـ DatePicker و TimePicker
+      // افترضنا أن لديك هذه المتغيرات من الـ DatePicker و TimePicker
       DateTime selectedDate = DateTime.now(); // التاريخ المختصر
       TimeOfDay selectedTime = TimeOfDay.now(); // الوقت المختار
 
