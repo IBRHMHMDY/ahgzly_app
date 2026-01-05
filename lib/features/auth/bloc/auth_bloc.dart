@@ -26,5 +26,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError("فشل تسجيل الدخول، تحقق من البيانات"));
       }
     });
+
+    on<LogoutRequested>((event, emit) async {
+      try {
+        // 1. إخبار السيرفر بتسجيل الخروج (إبطال التوكن)
+        await apiService.send.post('/logout');
+      } catch (e) {
+        // حتى لو فشل طلب السيرفر (مثلاً لا يوجد إنترنت)، سنكمل الحذف من الجهاز
+      } finally {
+        // 2. حذف التوكن من ذاكرة الهاتف
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('token');
+
+        // 3. العودة للحالة الابتدائية
+        emit(AuthInitial());
+      }
+    });
   }
 }

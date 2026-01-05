@@ -1,3 +1,5 @@
+import 'package:ahgzly_app/features/auth/bloc/auth_bloc.dart';
+import 'package:ahgzly_app/features/auth/bloc/auth_event.dart';
 import 'package:ahgzly_app/features/my_bookings/bloc/my_bookings_bloc.dart';
 import 'package:ahgzly_app/features/my_bookings/bloc/my_bookings_event.dart';
 import 'package:ahgzly_app/features/my_bookings/view/my_bookings_screen.dart';
@@ -28,6 +30,13 @@ class HomeScreen extends StatelessWidget {
               context.read<MyBookingsBloc>().add(
                 FetchMyBookings(),
               ); // تحديث البيانات عند الفتح
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              context.read<AuthBloc>().add(LogoutRequested());
+              Navigator.pushReplacementNamed(context, '/login');
             },
           ),
         ],
